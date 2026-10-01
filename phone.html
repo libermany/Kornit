@@ -4,34 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="format-detection" content="telephone=yes">
+<title>Phone Number</title>
 <style>
-  body { font-family: Segoe UI, Arial, sans-serif; background:#f3f4f6; margin:0; }
-  .card { background:#fff; max-width:420px; margin:15vh auto 0; padding:32px 48px; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,.12); text-align:center; }
-  .label { color:#666; font-size:14px; }
-  #phone { font-size:36px; font-weight:600; margin:12px 0; }
+  html, body { margin:0; padding:0; background:#fff; }
+  body { font-family: Arial, sans-serif; font-size:12pt; line-height:1.2; }
   #phone a { color:inherit; text-decoration:none; }
-  #msg { color:#c00; font-size:14px; }
+  #msg { color:#c00; }
 </style>
 </head>
-<body>
-<div class="card">
-  <!-- plain visible text + tel: link so the Genesys Cloud click-to-dial extension can detect it -->
-  <div id="phone"></div>
-  <div id="msg"></div>
-</div>
+<body><span id="phone"></span><span id="msg"></span>
 <script>
   // URL: phone.html?phone=0501234567  (also accepts number, ani, tel)
   var p = new URLSearchParams(location.search);
   var phone = (p.get('phone') || p.get('number') || p.get('ani') || p.get('tel') || '').trim();
-  var el = document.getElementById('phone');
 
   if (phone) {
+    // plain visible text inside a tel: link so the Genesys Cloud click-to-dial extension can detect it
     var a = document.createElement('a');
     a.href = 'tel:' + phone.replace(/[^\d+]/g, '');
     a.textContent = phone;
-    el.appendChild(a);
+    document.getElementById('phone').appendChild(a);
   } else {
-    document.getElementById('msg').textContent = 'No phone number in URL. Use ?phone=0501234567';
+    document.getElementById('msg').textContent = 'No phone number in URL';
   }
 </script>
 </body>
