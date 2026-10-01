@@ -37,11 +37,20 @@
   }
 
   if (phone) {
-    el.textContent = phone;
-    msg.textContent = 'Saved to Downloads as phone_' + phone.replace(/[^\w+]/g, '') + '.txt';
+    // tel: link + plain text so the Genesys Cloud click-to-dial extension (Chrome/Firefox) picks it up
+    const link = document.createElement('a');
+    link.href = 'tel:' + phone.replace(/[^\d+]/g, '');
+    link.textContent = phone;
+    link.style.color = 'inherit';
+    el.textContent = '';
+    el.appendChild(link);
     document.getElementById('again').style.display = '';
     document.getElementById('again').onclick = save;
-    save();
+    // add &save=0 to the URL to skip the automatic download
+    if (params.get('save') !== '0') {
+      save();
+      msg.textContent = 'Saved to Downloads as phone_' + phone.replace(/[^\w+]/g, '') + '.txt';
+    }
   } else {
     msg.textContent = 'No phone number in URL. Use ?phone=0501234567';
   }
