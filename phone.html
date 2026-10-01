@@ -9,7 +9,6 @@
   .card { background:#fff; padding:32px 48px; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,.12); text-align:center; }
   #phone { font-size:36px; font-weight:600; margin:12px 0; }
   .msg { color:#666; font-size:14px; }
-  button { margin-top:16px; padding:8px 18px; font-size:14px; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -17,24 +16,12 @@
   <div>Phone number</div>
   <div id="phone">-</div>
   <div class="msg" id="msg"></div>
-  <button id="again" style="display:none">Download again</button>
 </div>
 <script>
   const params = new URLSearchParams(location.search);
   // accepted parameter names: phone, number, ani, tel
   const phone = (params.get('phone') || params.get('number') || params.get('ani') || params.get('tel') || '').trim();
   const el = document.getElementById('phone');
-  const msg = document.getElementById('msg');
-
-  function save() {
-    const blob = new Blob([phone + '\r\n'], { type: 'text/plain' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'phone_' + phone.replace(/[^\w+]/g, '') + '.txt';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  }
 
   if (phone) {
     // tel: link + plain text so the Genesys Cloud click-to-dial extension (Chrome/Firefox) picks it up
@@ -44,15 +31,8 @@
     link.style.color = 'inherit';
     el.textContent = '';
     el.appendChild(link);
-    document.getElementById('again').style.display = '';
-    document.getElementById('again').onclick = save;
-    // add &save=0 to the URL to skip the automatic download
-    if (params.get('save') !== '0') {
-      save();
-      msg.textContent = 'Saved to Downloads as phone_' + phone.replace(/[^\w+]/g, '') + '.txt';
-    }
   } else {
-    msg.textContent = 'No phone number in URL. Use ?phone=0501234567';
+    document.getElementById('msg').textContent = 'No phone number in URL. Use ?phone=0501234567';
   }
 </script>
 </body>
