@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Incoming Phone Number</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; background:#f3f4f6; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
+  .card { background:#fff; padding:32px 48px; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,.12); text-align:center; }
+  #phone { font-size:36px; font-weight:600; margin:12px 0; }
+  .msg { color:#666; font-size:14px; }
+  button { margin-top:16px; padding:8px 18px; font-size:14px; cursor:pointer; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div>Phone number</div>
+  <div id="phone">-</div>
+  <div class="msg" id="msg"></div>
+  <button id="again" style="display:none">Download again</button>
+</div>
+<script>
+  const params = new URLSearchParams(location.search);
+  // accepted parameter names: phone, number, ani, tel
+  const phone = (params.get('phone') || params.get('number') || params.get('ani') || params.get('tel') || '').trim();
+  const el = document.getElementById('phone');
+  const msg = document.getElementById('msg');
+
+  function save() {
+    const blob = new Blob([phone + '\r\n'], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'phone_' + phone.replace(/[^\w+]/g, '') + '.txt';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  if (phone) {
+    el.textContent = phone;
+    msg.textContent = 'Saved to Downloads as phone_' + phone.replace(/[^\w+]/g, '') + '.txt';
+    document.getElementById('again').style.display = '';
+    document.getElementById('again').onclick = save;
+    save();
+  } else {
+    msg.textContent = 'No phone number in URL. Use ?phone=0501234567';
+  }
+</script>
+</body>
+</html>
